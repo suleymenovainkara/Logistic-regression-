@@ -1,0 +1,25 @@
+#Предсказание выживания на основе возраста.
+
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
+from sklearn.preprocessing import LabelEncoder
+
+data = pd.read_csv('C:/Users/Админ/OneDrive/Documents/3 курс/машинное обучение/Titanic-Dataset.csv')
+
+data = data[['Age', 'Sex', 'Pclass', 'Survived']].dropna() 
+
+label_encoder = LabelEncoder()
+data['Sex'] = label_encoder.fit_transform(data['Sex'])
+
+X = data[['Age', 'Sex', 'Pclass']]
+y = data['Survived']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+
+model = LogisticRegression()
+model.fit(X_train, y_train)
+
+y_pred = model.predict(X_test)
+accuracy = accuracy_score(y_test, y_pred)
+print(f"Точность модели на основе возраста, пола и класса каюты: {accuracy:.2f}")
